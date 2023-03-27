@@ -1,0 +1,23 @@
+Base_functions      := { (*,2,0,real), (+,2,0,real) }
+Extension_functions := { (d,2,1,int,int,real) }
+Relations           := { (<=,2), (<,2), (>,2), (>=,2) }
+
+Clauses:=
+% Universally quantified axioms for distance
+  (FORALL u,v). --> d(u,v) >= _0;
+  (FORALL u,v).  u = v --> d(u,v) = _0;
+  (FORALL u,v). d(u,v) =_0 --> u=v;
+  (FORALL u,v,w). --> d(u,w) <= d(u,v) + d(v,w);
+
+Query:=
+  d(c,a) > d(a,b) + d(c,b);
+
+  --> d(a,a) = d(a,a);
+  --> d(a,b) = d(b,a);
+  --> d(a,c) = d(c,a);
+  --> d(b,a) = d(a,b);
+  --> d(b,b) = d(b,b);
+  --> d(b,c) = d(c,b);
+  --> d(c,a) = d(a,c);
+  --> d(c,b) = d(b,c);
+  --> d(c,c) = d(c,c);

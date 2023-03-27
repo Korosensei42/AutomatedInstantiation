@@ -1,0 +1,46 @@
+Base_functions      := { }
+Extension_functions := { (hi,1), (po,1), (i,1)}
+Relations           := { (R,2), (M,3) }
+Constants         := { (V, int), (H, int), (LV, int), (O, int), (D, int) }
+% V - Ventricle, H - Heart, LV - Left Ventricle, D - Disease
+%hi - hasInflammation, po - partOf, i - is infected
+
+Base :=
+  (FORALL x, y, z). M[x,y,z] --> R[z, x];
+  (FORALL x, y, z). M[x,y,z] --> R[z, y];
+  (FORALL x, y, z, u). M[x, y, z], R[u, x], R[u, y] --> R[u, z];
+  (FORALL x). R[x, x];
+  (FORALL x, y). R[x, y], R[y, x] --> y = x;
+  (FORALL x, y, z). R[x, y], R[y, z] --> R[x, z];
+
+
+
+Clauses:=
+% Axiom R1
+% Monotonicity axioms of f, g, h
+  (FORALL x, y). R[x, y] --> R[hi(x), hi(y)];
+  (FORALL x, y). R[x, y] --> R[po(x), po(y)];
+  (FORALL x, y). R[x, y] --> R[i(x), i(y)];
+%part-of axiom:
+  (FORALL x, y). R[x, po(y)] --> R[po(x), po(y)];
+
+Query:=
+
+R[LV, V]; 	%the left ventricle is a ventricle
+R[V, po(H)];%a ventricle is part of the heart
+R[H, O];	%the heart is an organ
+R[D, hi(V)];%there is a disease that causes the ventricle to have an inflammation
+% Negation of inclusion to be proved:
+NOT(R[D, i(O)]);%there is a disease that causes an organ to be infected
+
+
+
+R[O, po(O)] --> R[hi(O), i(O)]; 
+R[O, po(V)] --> R[hi(O), i(V)]; 
+R[O, po(H)] --> R[hi(O), i(H)]; 
+R[V, po(O)] --> R[hi(V), i(O)]; 
+R[V, po(V)] --> R[hi(V), i(V)]; 
+R[V, po(H)] --> R[hi(V), i(H)]; 
+R[H, po(O)] --> R[hi(H), i(O)]; 
+R[H, po(V)] --> R[hi(H), i(V)]; 
+R[H, po(H)] --> R[hi(H), i(H)]; 
